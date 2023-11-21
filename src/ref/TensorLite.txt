@@ -1,0 +1,60 @@
+import cv2
+from tflite_runtime.interpreter import Interpreter
+import numpy as np
+
+# Path to the TFLite model
+modelPath = '<PATH_TO_MODEL>'
+
+# Path to the labels file
+labelPath = '<PATH_TO_LABELS>'
+
+# This function takes in a TFLite Interpreter and Image, and returns classifications
+def classifyImage(interpreter, image):
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+
+    # Preprocess the input image
+    input_data = cv2.resize(image, (input_details[0]['shape'][2], input_details[0]['shape'][1]))
+    input_data = np.expand_dims(input_data, axis=0)
+    input_data = (input_data.astype(np.float32) / 127.5) - 1.0
+
+    interpreter.set_tensor(input_details[0]['index'], input_data)
+
+    # Run inference
+    interpreter.invoke()
+
+    # Get the output results
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+    
+    return output_data
+
+def main():
+    # Load your model onto the TF Lite Interpreter
+    interpreter = Interpreter(modelPath)
+    interpreter.allocate_tensors()
+
+    labels = []
+    with open(labelPath, 'r') as f:
+        labels = [line.strip() for line in f.readlines()]
+
+    cap = cv2.VideoCapture(0)
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Flip image so it matches the training input
+        frame = cv2.flip(frame, 1)
+
+        # Classify and display image
+        results = classifyImage(interpreter, frame)
+        print(f'Label: {labels[np.argmax(results)]}, Score: {results[0][np.argmax(results)]}')
+        cv2.imshow('frame', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
