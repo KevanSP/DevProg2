@@ -1,0 +1,4 @@
+opencv
+tensorflowlite
+gradio or flask
+picamera2
