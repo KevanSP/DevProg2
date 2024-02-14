@@ -9,10 +9,11 @@ FROM python:3.9
 # The first parameter 'Sensors.py' is the name of the file on the host.
 # The second parameter '/' is the path where to put the file on the image.
 # Here we put the file at the image root folder.
+RUN apt install -y libopenblas-base
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
-RUN sudo apt install -y python3-picamera2
+RUN apt install -y python3-picamera2
 COPY hal ./hal
 COPY Sensors.py .
 COPY main.py .
