@@ -14,6 +14,9 @@ COPY Sensors.py .
 COPY main.py .
 COPY Notification.py .
 COPY requirements.txt .
+COPY labels.txt .
+COPY model_unquant.tflite .
+
 RUN pip3 install -r requirements.txt
 RUN sudo apt install -y python3-picamera2
 

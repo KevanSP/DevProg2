@@ -4,3 +4,5 @@ pushbullet
 multiprocessing
 threading
 certifi
+numpy
+tflite_runtime
