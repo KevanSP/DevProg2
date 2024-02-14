@@ -4,8 +4,8 @@ from threading import Thread
 from time import sleep
 
 # Importing functions to be tested
-from main import (initialize_hardware, turn_0ff_led, turn_0n_led, main,
-                              thread1, thread2)
+from Sensors import (initialize_hardware, turn_0ff_led, turn_0n_led, main,
+                     thread1, thread2)
 
 # Define a mock class for the hal_temp_humidity_sensor
 class MockTempHumiditySensor:

@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-import main as mf
+import Sensors as mf
 
 def test_temperatureThread():
     result = []
@@ -56,4 +56,6 @@ def test_motorThread():
 
     assert (result == pass_arr)
 
-
+def test_nof():
+    mf.noifThread(True)
+    assert True
