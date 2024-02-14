@@ -1,8 +1,6 @@
 wheel
 setuptools
-pushbullet
-multiprocessing
-threading
+pushbullet-python
 certifi
 numpy
 tflite_runtime
