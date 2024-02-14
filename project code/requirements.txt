@@ -3,3 +3,4 @@ setuptools
 pushbullet
 multiprocessing
 threading
+certifi
