@@ -1,6 +1,9 @@
 wheel
 setuptools
-pushbullet-python
+pushbullet.py
+RPi.GPIO
+spidev
+picamera2
 certifi
 numpy
 tflite_runtime

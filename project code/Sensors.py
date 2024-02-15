@@ -26,14 +26,10 @@ def initialize_hardware():
     buzz.turn_off()
 
 
-def temperatureThread(test_mode, temp_humi):
+def temperatureThread():
     global Output, Run_Multithread
     while Run_Multithread:
-        if not test_mode:
-            temperature, humidity = temp.read_temp_humidity()
-        else:
-            temperature, humidity = temp_humi
-
+        temperature, humidity = temp.read_temp_humidity()
         # print(temperature, humidity)
         if temperature > 80 or humidity > 100:
             Output = True
@@ -51,7 +47,7 @@ def slideSwitchThread():
 def lightingThread():
     global Output, Run_Multithread
     while Run_Multithread:
-        threshold_lighting = 700
+        threshold_lighting = 1000
         lighting = adc.get_adc_value(0)
         # print ("Lighting value", lighting)
         if lighting > threshold_lighting:
@@ -59,33 +55,34 @@ def lightingThread():
     return Output
 
 
-def motorThread(test_mode, test_count):
+def motorThread():
     global Output, Run_Multithread, count
-    if test_mode:
-        Output = True
-        count = test_count
     while Run_Multithread:
-        while Output:
-            if count <= 10:
-                buzz.turn_on()
-                valve.set_motor_speed(60)
-                turn_on_led()
-                sleep(0.5)
-                turn_off_led()
-                sleep(0.5)
-                count += 1
-                # print(count)
-            else:
-                Output = False
-                count = 0
-                buzz.turn_off()
-                valve.set_motor_speed(0)
-                # print(Output)
+        if Output:
+            while True:
+                if count <= 10:
+                    buzz.turn_on()
+                    valve.set_motor_speed(60)
+                    turn_on_led()
+                    sleep(0.5)
+                    turn_off_led()
+                    sleep(0.5)
+                    count += 1
+                    # print(count)
+                else:
+                    Output = False
+                    count = 0
+                    buzz.turn_off()
+                    valve.set_motor_speed(0)
+                    # print(Output)
+                    return
     return Output, count
 
-def noifThread(test_mode):
-    if Output or test_mode:
-        noif.Send_Notif('Sensor Detection', 'One Of The Sensor Detected Possible Fire.')
+def noifThread():
+    while Run_Multithread:
+        if Output:
+            noif.Send_Notif('Sensor Detection', 'One Of The Sensor Detected Possible Fire.')
+        sleep(5)
 
 
 def turn_off_led():
