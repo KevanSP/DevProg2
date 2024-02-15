@@ -9,7 +9,9 @@ FROM python:3.9
 # The first parameter 'Sensors.py' is the name of the file on the host.
 # The second parameter '/' is the path where to put the file on the image.
 # Here we put the file at the image root folder.
-RUN apt install -y libopenblas-base
+RUN apt update
+RUN apt upgrade -y
+RUN apt-get install -y libopenblas-base cmake
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
